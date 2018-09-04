@@ -34,7 +34,9 @@ To determine the forces between particles, we need to find the neighboring parti
 #### Particle Forces
 ##### Incompressibility
 The calculation of force is based on a particle's position and its neighbors. The idea is to create a `density field` which decides the overall forces exerted on the particle. The idea is that the fluid must maintain a constant density. To do this, we must make sure that the position of each particle in every iteration makes the particle's density as close to the rest density as possible. Thus, the first step would be to calculate the density of each particle. This is done by using the SPH (Smoothed Particle Hydro-dynamic) density estimation standard. *W* represents a kernel and h is the cut-off distance for a particle's neighbor. 
-<center>$\sum_{j}W(p_i - p_j , h)$</center>
+<p align="center">
+<a href="http://www.codecogs.com/eqnedit.php?latex=\sum_{j}W(p_i&space;-&space;p_j&space;,&space;h)" target="_blank"><img src="http://latex.codecogs.com/gif.latex?\sum_{j}W(p_i&space;-&space;p_j&space;,&space;h)" title="\sum_{j}W(p_i - p_j , h)" /></a>
+</p>
 The kernel we use here is Poly6 Kernel, as with Müller et al
 <p align="center">
 	<img src="https://raw.githubusercontent.com/jonny97/3Dsim/master/Images/polysix.png" align="middle" width="400px"/> 
@@ -80,14 +82,19 @@ The $\Delta q$ is a fraction of our neighbor cut-off distance ($h$), and the k a
 
 
 ##### Viscosity
-In order to confine some unnatural oscillations and make the set of particles more fluid-like, we apply some slight damping by introducing viscosity to the fluid. The viscosity of a fluid describes the thickness and stickiness of a fluid. The update of each particle's velocity is based on the following equation: 
+In order to confine some unnatural oscillations and make the set of particles more fluid-like, we apply some slight damping by introducing viscosity to the fluid. The viscosity of a fluid describes the thickness and stickiness of a fluid. The update of each particle's velocity is based on the following equation:   
 <p align="center">
 	<a href="http://www.codecogs.com/eqnedit.php?latex=v_{i}^{new}&space;=&space;v_i&space;&plus;&space;c&space;\sum_{j}&space;v_{ij}&space;W(p_i&space;-&space;p_j&space;,&space;h)" target="_blank"><img src="http://latex.codecogs.com/gif.latex?v_{i}^{new}&space;=&space;v_i&space;&plus;&space;c&space;\sum_{j}&space;v_{ij}&space;W(p_i&space;-&space;p_j&space;,&space;h)" title="v_{i}^{new} = v_i + c \sum_{j} v_{ij} W(p_i - p_j , h)" /></a> 
 </p>
 
+High Viscosity:  
 <p align="center">
 	<img src="https://raw.githubusercontent.com/jonny97/3Dsim/master/Images/highVec.gif" align="middle" width="400px"/> 
+<br>
 </p>
+
+
+Low Viscosity:  
 <p align="center">
 	<img src="https://raw.githubusercontent.com/jonny97/3Dsim/master/Images/lowVec.gif" align="middle" width="400px"/> 
 </p>
@@ -96,7 +103,7 @@ In order to confine some unnatural oscillations and make the set of particles mo
 #### Rendering Structure
 The overall structure of our simulation loop consists the following steps: 
 <p align="center">
-	<img src="https://raw.githubusercontent.com/jonny97/3Dsim/master/Images/sequenceExplain.png" align="middle" width="400px"/> 
+	<img src="https://raw.githubusercontent.com/jonny97/3Dsim/master/Images/sequenceExplain.png" align="middle" width="600px"/> 
 </p>
 
 ### Final Result
