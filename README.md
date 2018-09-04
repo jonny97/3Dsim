@@ -16,12 +16,12 @@ There is a sequence of constraints to be updated in each iteration. The steps ar
 
 #### External Forces
 The first step is to accumulate the external forces and perform the first-step prediction for the position of the particles based on its velocity. In this project, the only natural constant force to be applied is the gravity. Thus, we firstly just apply the gravity forces on each particle and get the velocity and thus position updates. The velocity is calculated using the simple kinematics physics equations with general idea of Euler's Method, where t is a very small time delta which depends on the number of steps and frames per second of rendering:  
-$$t = \frac{1}{m[frames/sec] * n[steps/frame]}$$
+<a align="center" href="http://www.codecogs.com/eqnedit.php?latex=t&space;=&space;\frac{1}{m[frames/sec]&space;*&space;n[steps/frame]}" target="_blank"><img src="http://latex.codecogs.com/gif.latex?t&space;=&space;\frac{1}{m[frames/sec]&space;*&space;n[steps/frame]}" title="t = \frac{1}{m[frames/sec] * n[steps/frame]}" /></a>
 
 This is what?
-<center>$v = v_0 + at$</center>
+<a align="center" href="http://www.codecogs.com/eqnedit.php?latex=v&space;=&space;v_0&space;&plus;&space;at" target="_blank"><img src="http://latex.codecogs.com/gif.latex?v&space;=&space;v_0&space;&plus;&space;at" title="v = v_0 + at" /></a>
 From the velocity, we can use a similar equation to find the predicted position: 
-<center>$p = p_0 + vt$</center>
+<a align="center" href="http://www.codecogs.com/eqnedit.php?latex=p&space;=&space;p_0&space;&plus;&space;vt" target="_blank"><img src="http://latex.codecogs.com/gif.latex?p&space;=&space;p_0&space;&plus;&space;vt" title="p = p_0 + vt" /></a>
 
 #### Finding Neighbors
 To determine the forces between particles, we need to find the neighboring particles first. The idea is to select according to a bounding sphere centered with the particle and filter out neighboring particles by position. 
