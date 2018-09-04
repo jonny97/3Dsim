@@ -16,12 +16,17 @@ There is a sequence of constraints to be updated in each iteration. The steps ar
 
 #### External Forces
 The first step is to accumulate the external forces and perform the first-step prediction for the position of the particles based on its velocity. In this project, the only natural constant force to be applied is the gravity. Thus, we firstly just apply the gravity forces on each particle and get the velocity and thus position updates. The velocity is calculated using the simple kinematics physics equations with general idea of Euler's Method, where t is a very small time delta which depends on the number of steps and frames per second of rendering:  
-<a align="center" href="http://www.codecogs.com/eqnedit.php?latex=t&space;=&space;\frac{1}{m[frames/sec]&space;*&space;n[steps/frame]}" target="_blank"><img src="http://latex.codecogs.com/gif.latex?t&space;=&space;\frac{1}{m[frames/sec]&space;*&space;n[steps/frame]}" title="t = \frac{1}{m[frames/sec] * n[steps/frame]}" /></a>
+<p align="center">
+	<a href="http://www.codecogs.com/eqnedit.php?latex=t&space;=&space;\frac{1}{m[frames/sec]&space;*&space;n[steps/frame]}" target="_blank"><img src="http://latex.codecogs.com/gif.latex?t&space;=&space;\frac{1}{m[frames/sec]&space;*&space;n[steps/frame]}" title="t = \frac{1}{m[frames/sec] * n[steps/frame]}" /></a>
+	</p>
 
 This is what?
-<a align="center" href="http://www.codecogs.com/eqnedit.php?latex=v&space;=&space;v_0&space;&plus;&space;at" target="_blank"><img src="http://latex.codecogs.com/gif.latex?v&space;=&space;v_0&space;&plus;&space;at" title="v = v_0 + at" /></a>
+<p align="center">
+<a href="http://www.codecogs.com/eqnedit.php?latex=v&space;=&space;v_0&space;&plus;&space;at" target="_blank"><img src="http://latex.codecogs.com/gif.latex?v&space;=&space;v_0&space;&plus;&space;at" title="v = v_0 + at" /></a>
+</p>
 From the velocity, we can use a similar equation to find the predicted position: 
-<a align="center" href="http://www.codecogs.com/eqnedit.php?latex=p&space;=&space;p_0&space;&plus;&space;vt" target="_blank"><img src="http://latex.codecogs.com/gif.latex?p&space;=&space;p_0&space;&plus;&space;vt" title="p = p_0 + vt" /></a>
+<p align="center">
+<a href="http://www.codecogs.com/eqnedit.php?latex=p&space;=&space;p_0&space;&plus;&space;vt" target="_blank"><img src="http://latex.codecogs.com/gif.latex?p&space;=&space;p_0&space;&plus;&space;vt" title="p = p_0 + vt" /></a></p>
 
 #### Finding Neighbors
 To determine the forces between particles, we need to find the neighboring particles first. The idea is to select according to a bounding sphere centered with the particle and filter out neighboring particles by position. 
@@ -31,8 +36,10 @@ To determine the forces between particles, we need to find the neighboring parti
 The calculation of force is based on a particle's position and its neighbors. The idea is to create a `density field` which decides the overall forces exerted on the particle. The idea is that the fluid must maintain a constant density. To do this, we must make sure that the position of each particle in every iteration makes the particle's density as close to the rest density as possible. Thus, the first step would be to calculate the density of each particle. This is done by using the SPH (Smoothed Particle Hydro-dynamic) density estimation standard. *W* represents a kernel and h is the cut-off distance for a particle's neighbor. 
 <center>$\sum_{j}W(p_i - p_j , h)$</center>
 The kernel we use here is Poly6 Kernel, as with Müller et al
+<p align="center">
+	<img src="https://raw.githubusercontent.com/jonny97/3Dsim/master/Images/polysix.png" align="middle" width="400px"/> 
+</p>
 
-![](https://raw.githubusercontent.com/jonny97/3Dsim/master/Images/polysix.png)
 
 The estimation process is basically summing up the difference in positions between a particle and its neighbors, weighted by a kernel. 
 
@@ -47,9 +54,15 @@ We can find it by a series of [Newton's Method](https://en.wikipedia.org/wiki/Ne
 <center>$C(p+\Delta p) \approx C(p) + \nabla C^{T} \Delta p = C(p) + \nabla C^{T}\nabla C \lambda = 0$</center>
 
 The gradient of a constraint is defined as following: 
-![Alt text](https://raw.githubusercontent.com/jonny97/3Dsim/master/Images/gradient.png)
+<p align="center">
+	<img src="https://raw.githubusercontent.com/jonny97/3Dsim/master/Images/gradient.png" align="middle" width="400px"/> 
+</p>
+
 The kernel used here is the Spiky Kernel: 
-![Alt text](https://raw.githubusercontent.com/jonny97/3Dsim/master/Images/spiky.png)
+<p align="center">
+	<img src="https://raw.githubusercontent.com/jonny97/3Dsim/master/Images/spiky.png" align="middle" width="400px"/> 
+</p>
+
 
 Plugging this into our approximation, we can solve for lambda as the following. Note that the $\epsilon$ appeared in the denominator is a method we use to regularize the constraint using constraint force mixing. This is because otherwise the original denominator $\sum_{k}|\nabla_{p_k}C_i|^{2}$ will become unstable when particles are close to separating. Thus, we can improve the accuracy by adding a relaxation parameter to the diagonal of the parameter matrix. 
 <center>$\lambda_i = - \frac{C_i (p_1 ,\ldots ,p_n)}{\sum_{k}|\nabla_{p_k}C_i|^{2} + \epsilon}$</center>
@@ -68,36 +81,53 @@ The $\Delta q$ is a fraction of our neighbor cut-off distance ($h$), and the k a
 
 ##### Viscosity
 In order to confine some unnatural oscillations and make the set of particles more fluid-like, we apply some slight damping by introducing viscosity to the fluid. The viscosity of a fluid describes the thickness and stickiness of a fluid. The update of each particle's velocity is based on the following equation: 
-<center>$v_{i}^{new} = v_i + c \sum_{j} v_{ij} W(p_i - p_j , h)$</center>
-![Higher Viscosity](https://raw.githubusercontent.com/jonny97/3Dsim/master/Images/highVec.gif)
-![Lower Viscosity](https://raw.githubusercontent.com/jonny97/3Dsim/master/Images/lowVec.gif)
+<p align="center">
+	<a href="http://www.codecogs.com/eqnedit.php?latex=v_{i}^{new}&space;=&space;v_i&space;&plus;&space;c&space;\sum_{j}&space;v_{ij}&space;W(p_i&space;-&space;p_j&space;,&space;h)" target="_blank"><img src="http://latex.codecogs.com/gif.latex?v_{i}^{new}&space;=&space;v_i&space;&plus;&space;c&space;\sum_{j}&space;v_{ij}&space;W(p_i&space;-&space;p_j&space;,&space;h)" title="v_{i}^{new} = v_i + c \sum_{j} v_{ij} W(p_i - p_j , h)" /></a> 
+</p>
+
+<p align="center">
+	<img src="https://raw.githubusercontent.com/jonny97/3Dsim/master/Images/highVec.gif" align="middle" width="400px"/> 
+</p>
+<p align="center">
+	<img src="https://raw.githubusercontent.com/jonny97/3Dsim/master/Images/lowVec.gif" align="middle" width="400px"/> 
+</p>
+
 
 #### Rendering Structure
 The overall structure of our simulation loop consists the following steps: 
-![Simulation Loop](https://raw.githubusercontent.com/jonny97/3Dsim/master/Images/sequenceExplain.png)
-
+<p align="center">
+	<img src="https://raw.githubusercontent.com/jonny97/3Dsim/master/Images/sequenceExplain.png" align="middle" width="400px"/> 
+</p>
 
 ### Final Result
-![Simulation Loop](https://raw.githubusercontent.com/jonny97/3Dsim/master/Images/phasefinal.gif)
-
+<p align="center">
+	<img src="https://raw.githubusercontent.com/jonny97/3Dsim/master/Images/phasefinal.gif" align="middle" width="600px"/> 
+</p>
 
 ## Interaction
 Showing a single model of water flow may not show the full attribute of the fluid. Thus, in order to create more testing models and make it more fun, we developed some interaction methods which allows the user to exert more control to the system. 
 
 ### Water Drop
 In our user interface, we have a button enabling additional drops of particles. Once turned on, the dropping methods allows the user to add 3x3x3 particle drops to the fluid by clicking. 
-![Dropping](https://raw.githubusercontent.com/jonny97/3Dsim/master/Images/drop.gif)
+<p align="center">
+	<img src="https://raw.githubusercontent.com/jonny97/3Dsim/master/Images/drop.gif" align="middle" width="600px"/> 
+</p>
+
 
 
 ### Concentration
 The original system is basically operating under a single natural force: gravity. This successfully mimics the real-life situation, but also limits the functionalities of the system. Thus, we decided to allow users to add more artificial forces to the system, which we call the "concentration" in out interaction method. The concentration method allows the user to "drag" the fluid particles with the mouse. In other words, the particles will "concentrate" on the mouse's movement. The concentration is realized by calculating the force from the mouse to each particles according to their distance. The closer to the mouse, the stronger the force. There is also a parameter called "concentration intensity" which represents the force intensity for each particle to concentrate on the mouse. The user can change this parameter on the user interface. With concentration, we can create much more fun!
 <tr>
 <td>
-<img src="https://raw.githubusercontent.com/jonny97/3Dsim/master/Images/concentration10.gif" align="middle" width="400px"/>
+<p align="center">
+<img src="https://raw.githubusercontent.com/jonny97/3Dsim/master/Images/concentration10.gif" align="middle" width="600px"/>
+	</p>
 <figcaption align="middle">Concentration Intensity = 10</figcaption>
 </td>
 <td>
-<img src="https://raw.githubusercontent.com/jonny97/3Dsim/master/Images/concentration100.gif" align="middle" width="400px"/>
+<p align="center">
+<img src="https://raw.githubusercontent.com/jonny97/3Dsim/master/Images/concentration100.gif" align="middle" width="600px"/>
+	</p>
 <figcaption align="middle">Concentration Intensity = 100</figcaption>
 </td>
 </tr>
