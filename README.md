@@ -45,15 +45,27 @@ The kernel we use here is Poly6 Kernel, as with Müller et al
 
 The estimation process is basically summing up the difference in positions between a particle and its neighbors, weighted by a kernel. 
 
-The dencity constraint on the i*th* paricle is defined using an equation of state: 
-<center>$C_i (p_1 ,\ldots, p_n) = \frac{\rho_i}{\rho_0} -1$</center>
+The dencity constraint on the <a href="https://www.codecogs.com/eqnedit.php?latex=i^{th}" target="_blank"><img src="https://latex.codecogs.com/gif.latex?i^{th}" title="i^{th}" /></a> paricle is defined using an equation of state: 
+
+<p align="center">
+	<a href="https://www.codecogs.com/eqnedit.php?latex=C_i&space;(p_1&space;,\ldots,&space;p_n)&space;=&space;\frac{\rho_i}{\rho_0}&space;-1" target="_blank"><img src="https://latex.codecogs.com/gif.latex?C_i&space;(p_1&space;,\ldots,&space;p_n)&space;=&space;\frac{\rho_i}{\rho_0}&space;-1" title="C_i (p_1 ,\ldots, p_n) = \frac{\rho_i}{\rho_0} -1" /></a></p>
+
 where $\rho_0$ is the rest density and $\rho_i$ is given by the standard SPH estimator: 
-<center>$\rho_i = \sum_{j} m_j W(p_i - p_j , h)$</center>
+
+<p align="center">
+<a href="https://www.codecogs.com/eqnedit.php?latex=\rho_i&space;=&space;\sum_{j}&space;m_j&space;W(p_i&space;-&space;p_j&space;,&space;h)" target="_blank"><img src="https://latex.codecogs.com/gif.latex?\rho_i&space;=&space;\sum_{j}&space;m_j&space;W(p_i&space;-&space;p_j&space;,&space;h)" title="\rho_i = \sum_{j} m_j W(p_i - p_j , h)" /></a></p>
+
 The Position Based Dynamics method finds a particle position correction $\Delta p$ that satisfies the constraint: 
-<center>$C(p + \Delta p) = 0$</center>
+<p align="center">
+<a href="https://www.codecogs.com/eqnedit.php?latex=C(p&space;&plus;&space;\Delta&space;p)&space;=&space;0" target="_blank"><img src="https://latex.codecogs.com/gif.latex?C(p&space;&plus;&space;\Delta&space;p)&space;=&space;0" title="C(p + \Delta p) = 0" /></a></p>
+
 We can find it by a series of [Newton's Method](https://en.wikipedia.org/wiki/Newton%27s_method) along the constraint gradient:
-<center>$\Delta p \approx \nabla C(p)\lambda$</center>
-<center>$C(p+\Delta p) \approx C(p) + \nabla C^{T} \Delta p = C(p) + \nabla C^{T}\nabla C \lambda = 0$</center>
+<p align="center">
+	<a href="https://www.codecogs.com/eqnedit.php?latex=\Delta&space;p&space;\approx&space;\nabla&space;C(p)\lambda" target="_blank"><img src="https://latex.codecogs.com/gif.latex?\Delta&space;p&space;\approx&space;\nabla&space;C(p)\lambda" title="\Delta p \approx \nabla C(p)\lambda" /></a>
+</p>
+<p align="center">
+<a href="https://www.codecogs.com/eqnedit.php?latex=C(p&plus;\Delta&space;p)&space;\approx&space;C(p)&space;&plus;&space;\nabla&space;C^{T}&space;\Delta&space;p&space;=&space;C(p)&space;&plus;&space;\nabla&space;C^{T}\nabla&space;C&space;\lambda&space;=&space;0" target="_blank"><img src="https://latex.codecogs.com/gif.latex?C(p&plus;\Delta&space;p)&space;\approx&space;C(p)&space;&plus;&space;\nabla&space;C^{T}&space;\Delta&space;p&space;=&space;C(p)&space;&plus;&space;\nabla&space;C^{T}\nabla&space;C&space;\lambda&space;=&space;0" title="C(p+\Delta p) \approx C(p) + \nabla C^{T} \Delta p = C(p) + \nabla C^{T}\nabla C \lambda = 0" /></a>
+</p>
 
 The gradient of a constraint is defined as following: 
 <p align="center">
@@ -66,19 +78,25 @@ The kernel used here is the Spiky Kernel:
 </p>
 
 
-Plugging this into our approximation, we can solve for lambda as the following. Note that the $\epsilon$ appeared in the denominator is a method we use to regularize the constraint using constraint force mixing. This is because otherwise the original denominator $\sum_{k}|\nabla_{p_k}C_i|^{2}$ will become unstable when particles are close to separating. Thus, we can improve the accuracy by adding a relaxation parameter to the diagonal of the parameter matrix. 
-<center>$\lambda_i = - \frac{C_i (p_1 ,\ldots ,p_n)}{\sum_{k}|\nabla_{p_k}C_i|^{2} + \epsilon}$</center>
-
+Plugging this into our approximation, we can solve for lambda as the following. Note that the $\epsilon$ appeared in the denominator is a method we use to regularize the constraint using constraint force mixing. This is because otherwise the original denominator <a href="https://www.codecogs.com/eqnedit.php?latex=\sum_{k}|\nabla_{p_k}C_i|^{2}" target="_blank"><img src="https://latex.codecogs.com/gif.latex?\sum_{k}|\nabla_{p_k}C_i|^{2}" title="\sum_{k}|\nabla_{p_k}C_i|^{2}" /></a> will become unstable when particles are close to separating. Thus, we can improve the accuracy by adding a relaxation parameter to the diagonal of the parameter matrix. 
+<p align="center">
+<a href="https://www.codecogs.com/eqnedit.php?latex=\lambda_i&space;=&space;-&space;\frac{C_i&space;(p_1&space;,\ldots&space;,p_n)}{\sum_{k}|\nabla_{p_k}C_i|^{2}&space;&plus;&space;\epsilon}" target="_blank"><img src="https://latex.codecogs.com/gif.latex?\lambda_i&space;=&space;-&space;\frac{C_i&space;(p_1&space;,\ldots&space;,p_n)}{\sum_{k}|\nabla_{p_k}C_i|^{2}&space;&plus;&space;\epsilon}" title="\lambda_i = - \frac{C_i (p_1 ,\ldots ,p_n)}{\sum_{k}|\nabla_{p_k}C_i|^{2} + \epsilon}" /></a>
+</p>
 Thus, the final position update for particle i is:
-<center>$\lambda p_i = \frac{1}{\rho_0} \sum_{j} (\lambda_i + \lambda_j) \nabla W(p_i - p_j , h)$</center>
-
+<p align="center">
+<a href="https://www.codecogs.com/eqnedit.php?latex=\lambda&space;p_i&space;=&space;\frac{1}{\rho_0}&space;\sum_{j}&space;(\lambda_i&space;&plus;&space;\lambda_j)&space;\nabla&space;W(p_i&space;-&space;p_j&space;,&space;h)" target="_blank"><img src="https://latex.codecogs.com/gif.latex?\lambda&space;p_i&space;=&space;\frac{1}{\rho_0}&space;\sum_{j}&space;(\lambda_i&space;&plus;&space;\lambda_j)&space;\nabla&space;W(p_i&space;-&space;p_j&space;,&space;h)" title="\lambda p_i = \frac{1}{\rho_0} \sum_{j} (\lambda_i + \lambda_j) \nabla W(p_i - p_j , h)" /></a>
+</p>
 With such method, we can update each particle's position in every iteration.
 
 ##### Tensile Instability
 When a particle has too few neighbor, it may end up taking negative pressure and clump together. Thus, in order to repulse the particles, we need add the surface tension, an artificial pressure, to the smoothing kernel. The corrective term is described by Monaghan, and is then added to our position update: 
-<center>$s_{corr} = -k(\frac{W(p_i - p_j , h)}{W(\Delta q, h)})^n$</center>
-<center>$\Delta p_i = \frac{1}{\rho_0}\sum_{j}(\lambda_i + \lambda_j + s_{corr})\nabla W(p_i - p_j , h)$</center>
-The $\Delta q$ is a fraction of our neighbor cut-off distance ($h$), and the k and n are small constants. Here we use $k = 0.001$, $n = 4$, and $\Delta q = 0.01 * h$, which are all tested values that made the simulation look most nature by experience. 
+<p align="center">
+<a href="https://www.codecogs.com/eqnedit.php?latex=s_{corr}&space;=&space;-k(\frac{W(p_i&space;-&space;p_j&space;,&space;h)}{W(\Delta&space;q,&space;h)})^n" target="_blank"><img src="https://latex.codecogs.com/gif.latex?s_{corr}&space;=&space;-k(\frac{W(p_i&space;-&space;p_j&space;,&space;h)}{W(\Delta&space;q,&space;h)})^n" title="s_{corr} = -k(\frac{W(p_i - p_j , h)}{W(\Delta q, h)})^n" /></a>
+</p>
+<p align="center">
+<a href="https://www.codecogs.com/eqnedit.php?latex=\Delta&space;p_i&space;=&space;\frac{1}{\rho_0}\sum_{j}(\lambda_i&space;&plus;&space;\lambda_j&space;&plus;&space;s_{corr})\nabla&space;W(p_i&space;-&space;p_j&space;,&space;h)" target="_blank"><img src="https://latex.codecogs.com/gif.latex?\Delta&space;p_i&space;=&space;\frac{1}{\rho_0}\sum_{j}(\lambda_i&space;&plus;&space;\lambda_j&space;&plus;&space;s_{corr})\nabla&space;W(p_i&space;-&space;p_j&space;,&space;h)" title="\Delta p_i = \frac{1}{\rho_0}\sum_{j}(\lambda_i + \lambda_j + s_{corr})\nabla W(p_i - p_j , h)" /></a>
+</p>
+The <a href="https://www.codecogs.com/eqnedit.php?latex=\Delta&space;q" target="_blank"><img src="https://latex.codecogs.com/gif.latex?\Delta&space;q" title="\Delta q" /></a> is a fraction of our neighbor cut-off distance ($h$), and the k and n are small constants. Here we use k = 0.001, n = 4, and <a href="https://www.codecogs.com/eqnedit.php?latex=\Delta&space;q&space;=&space;0.01&space;\times&space;h" target="_blank"><img src="https://latex.codecogs.com/gif.latex?\Delta&space;q&space;=&space;0.01&space;\times&space;h" title="\Delta q = 0.01 \times h" /></a>, which are all tested values that made the simulation look most nature by experience. 
 
 
 ##### Viscosity
